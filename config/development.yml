@@ -1,0 +1,15 @@
+server:
+  port: 3000
+
+db:
+ type: 'mysql'
+ port: 3306
+ database: 'taskmanagement'
+ host: localhost
+ username: root
+ password: ''
+ synchronize: true
+
+jwt:
+  secret: 'topsecret'
+ 
