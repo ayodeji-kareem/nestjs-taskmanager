@@ -1,6 +1,7 @@
 import { TaskRepository } from './task.repository';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import {
+  Logger,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -12,6 +13,7 @@ import { TaskStatus } from './task-status.enum';
 import { User } from 'src/auth/user.entity';
 @Injectable()
 export class TasksService {
+  private logger = new Logger('TasksService');
   constructor(
     @InjectRepository(Task)
     private taskRepository: TaskRepository,
@@ -21,7 +23,7 @@ export class TasksService {
     const { status, search } = filterDto;
     const query = this.taskRepository.createQueryBuilder('task');
 
-    query.where('task.userId = :userId', { userId: user.id });
+    query.where('task.userIdsdsds = :userId', { userId: user.id });
 
     if (status) {
       query.andWhere('task.status = :status', { status });
@@ -36,6 +38,12 @@ export class TasksService {
     try {
       return await query.getMany();
     } catch (error) {
+      this.logger.error(
+        `Failed to get tasks for user "${
+          user.username
+        }" with filters ${JSON.stringify(filterDto)}`,
+        error.stack,
+      );
       throw new InternalServerErrorException();
     }
   }
@@ -70,7 +78,15 @@ export class TasksService {
     task.title = title;
     task.description = description;
     task.status = TaskStatus.OPEN;
-    await task.save();
+    try {
+      await task.save();
+    } catch (error) {
+      this.logger.error(
+        `Failed to create task for user "${user.username}" with data: ${createTaskDto}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException();
+    }
     delete task.user;
 
     return task;
