@@ -28,7 +28,12 @@ lerna-debug.log*
 *.sublime-workspace
 
 # IDE - VSCode
+.gitignore
+# IDE folders - never tracked, no exceptions
+.idea/
+
+# fonts are not committed to the repo
+public/fonts/
 branch_structure.json
 temp_auto_push.bat
 temp_interactive_push.bat
-.gitignore
