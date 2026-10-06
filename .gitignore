@@ -28,7 +28,6 @@ lerna-debug.log*
 *.sublime-workspace
 
 # IDE - VSCode
-.gitignore
 # IDE folders - never tracked, no exceptions
 .idea/
 
